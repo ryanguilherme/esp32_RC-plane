@@ -56,12 +56,12 @@ void onDisconnectedController(ControllerPtr ctl) {
 void dumpGamepad(ControllerPtr ctl) {
 
     snprintf(dataToSend, sizeof(dataToSend),
-        "[%d|0x%02x|0x%04x|%4d|%4d|%4d]",
+        "[%d|0x%02x|0x%04x|%4d|%4d|%4d|%4d|%4d]",
         ctl->index(),        // Controller Index
         ctl->dpad(),         // D-pad
         ctl->buttons(),      // bitmask of pressed buttons
-        ctl->axisX(),        // (-511 - 512) left X Axis
         ctl->axisY(),        // (-511 - 512) left Y axis
+        ctl->axisRX(),       // (-511 - 512) right X axis
         ctl->throttle()     // (0 - 1023): throttle (AKA gas) button
     );
 
