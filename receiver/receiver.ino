@@ -3,18 +3,16 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-#define led 12
 RF24 radio(2, 4);  // CE, CSN
 const byte address[6] = "00001";
 boolean switchstate = 0;
 
-char dataReceived[10]; // this must match dataToSend in the TX
+char dataReceived[32]; // this must match dataToSend in the TX
 bool newData = false;
 
 void setup() {
-  pinMode(led, OUTPUT);
   Serial.begin(115200);
-  Serial.println("\nReceiver Circuit");
+  Serial.println("\n[BOOTING RECEIVER ESP32]");
   radio.begin();
   radio.openReadingPipe(0, address);
   radio.setPALevel(RF24_PA_MIN);  // radio.setPALevel(RF24_PA_MIN);
@@ -48,7 +46,7 @@ void showData()
 {
    if (newData == true)
    {
-      Serial.print("Data received ");
+      Serial.print("[RECEIVED DATA]: ");
       Serial.println(dataReceived);
       newData = false;
    }
