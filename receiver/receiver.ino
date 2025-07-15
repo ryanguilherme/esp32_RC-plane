@@ -11,8 +11,8 @@
 RF24 radio(2, 4);  // CE, CSN
 const byte address[6] = "00001";
 boolean switchstate = 0;
-static const int PITCH = 27;
-static const int YAW = 26;
+static const int PITCH_PIN = 25;
+static const int YAW_PIN = 26;
 
 Servo pitch;
 Servo yaw;
@@ -35,8 +35,8 @@ void setup() {
 
     //===SERVO SETUP===
     Serial.println("\nSetting up pitch and yaw servos...");
-    pitch.attach(PITCH); // initialize pitch servo
-    yaw.attach(YAW); // initialize yaw servo
+    pitch.attach(PITCH_PIN); // initialize pitch servo
+    yaw.attach(YAW_PIN); // initialize yaw servo
     pitch.write(90); // positioning pitch servo in neutral position
     yaw.write(90); // positioning yaw servo in neutral position
     Serial.println("\nServos setup finished.");
@@ -58,6 +58,8 @@ void loop() {
     getData();
     //Serial.println(dataReceived);
     processData();
+    updatePitchServo(axisY);
+    updateYawServo(axisRX);
     //showData();
   }
 }
@@ -108,4 +110,22 @@ void processData() {
 
   Serial.print(" Throttle: ");
   Serial.print(throttle);
+}
+
+//=================
+
+void updatePitchServo(int value) {
+  // Garante que está no intervalo [-512, 512]
+  value = constrain(value, -512, 512);
+
+  float angle = ((float)(value + 512) * 180.0) / 1024.0;  // map com precisão
+  pitch.write((int)angle);
+}
+
+//=================
+void updateYawServo(int value) {
+  value = constrain(value, -512, 512);
+
+  float angle = ((float)(value + 512) * 180.0) / 1024.0;
+  yaw.write((int)angle);
 }
