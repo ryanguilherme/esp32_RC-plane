@@ -56,8 +56,7 @@ void onDisconnectedController(ControllerPtr ctl) {
 void dumpGamepad(ControllerPtr ctl) {
 
     snprintf(dataToSend, sizeof(dataToSend),
-        "[%d|0x%02x|0x%04x|%4d|%4d|%4d|%4d|%4d]",
-        ctl->index(),        // Controller Index
+        "0x%02x|0x%04x|%4d|%4d|%4d|",
         ctl->dpad(),         // D-pad
         ctl->buttons(),      // bitmask of pressed buttons
         ctl->axisY(),        // (-511 - 512) left Y axis
