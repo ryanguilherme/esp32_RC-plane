@@ -13,9 +13,11 @@ const byte address[6] = "00001";
 boolean switchstate = 0;
 static const int PITCH_PIN = 25;
 static const int YAW_PIN = 26;
+static const int THROTTLE_PIN = 27;
 
 Servo pitch;
 Servo yaw;
+Servo throttleServo;
 
 char dataReceived[32]; // this must match dataToSend in the TX
 bool newData = false;
@@ -39,6 +41,8 @@ void setup() {
     yaw.attach(YAW_PIN); // initialize yaw servo
     pitch.write(90); // positioning pitch servo in neutral position
     yaw.write(90); // positioning yaw servo in neutral position
+    throttleServo.attach(THROTTLE_PIN);
+    throttleServo.write(0);
     Serial.println("\nServos setup finished.");
 
     //===WIRELESS CONNECTION SETUP===
@@ -60,6 +64,7 @@ void loop() {
     processData();
     updatePitchServo(axisY);
     updateYawServo(axisRX);
+    updateThrottleServo(throttle);
     //showData();
   }
 }
@@ -128,4 +133,15 @@ void updateYawServo(int value) {
 
   float angle = ((float)(value + 512) * 180.0) / 1024.0;
   yaw.write((int)angle);
+}
+
+void updateThrottleServo(int value) {
+  value = constrain(value, 0, 1020);
+
+  float angle = ((float)value * 180.0) / 1020.0;
+
+  throttleServo.write((int)angle);
+
+  Serial.print(" -> Throttle servo angle: ");
+  Serial.println((int)angle);
 }
