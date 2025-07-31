@@ -13,7 +13,7 @@ const byte address[6] = "00001";
 boolean switchstate = 0;
 static const int PITCH_PIN = 25;
 static const int YAW_PIN = 26;
-static const int THROTTLE_PIN = 27;
+static const int THROTTLE_PIN = 33;
 
 Servo pitch;
 Servo yaw;
@@ -42,7 +42,9 @@ void setup() {
     pitch.write(90); // positioning pitch servo in neutral position
     yaw.write(90); // positioning yaw servo in neutral position
     throttleServo.attach(THROTTLE_PIN);
-    throttleServo.write(0);
+    //throttleServo.write(0);
+    throttleServo.writeMicroseconds(1000);
+    delay(3000);
     Serial.println("\nServos setup finished.");
 
     //===WIRELESS CONNECTION SETUP===
@@ -135,13 +137,25 @@ void updateYawServo(int value) {
   yaw.write((int)angle);
 }
 
+// void updateThrottleServo(int value) {
+//   value = constrain(value, 0, 1020);
+
+//   float angle = ((float)value * 180.0) / 1020.0;
+
+//   throttleServo.write((int)angle);
+
+//   Serial.print(" -> Throttle servo angle: ");
+//   Serial.println((int)angle);
+// }
+
 void updateThrottleServo(int value) {
   value = constrain(value, 0, 1020);
 
-  float angle = ((float)value * 180.0) / 1020.0;
+  // Converte para sinal PWM entre 1000 e 2000 µs
+  int pwm = map(value, 0, 1020, 1000, 2000);
 
-  throttleServo.write((int)angle);
+  throttleServo.writeMicroseconds(pwm);
 
-  Serial.print(" -> Throttle servo angle: ");
-  Serial.println((int)angle);
+  Serial.print(" -> Throttle PWM (µs): ");
+  Serial.println(pwm);
 }
